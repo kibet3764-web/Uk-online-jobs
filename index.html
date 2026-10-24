@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK JobBridge · Apply & Pay</title>
+  <!-- Font Awesome 6 (free) for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      max-width: 1000px;
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    /* header */
+    .header {
+      background: #0b2a4a;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 4px solid #f5b042;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: -0.5px;
+    }
+
+    .logo i {
+      color: #f5b042;
+      font-size: 2rem;
+    }
+
+    .logo span {
+      color: #f5b042;
+    }
+
+    .badge-uk {
+      background: rgba(255, 255, 255, 0.12);
+      color: #f5b042;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(245, 176, 66, 0.3);
+    }
+
+    .badge-uk i {
+      font-size: 0.9rem;
+    }
+
+    /* progress bar */
+    .progress-container {
+      padding: 1.5rem 2rem 0.5rem 2rem;
+      background: #ffffff;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 5%;
+      width: 90%;
+      height: 3px;
+      background: #e2e8f0;
+      z-index: 1;
+      border-radius: 10px;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+      width: 33%;
+    }
+
+    .step-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 8px;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .step.active .step-circle {
+      border-color: #0b2a4a;
+      background: #0b2a4a;
+      color: white;
+      box-shadow: 0 0 0 4px rgba(11, 42, 74, 0.15);
+    }
+
+    .step.completed .step-circle {
+      border-color: #10b981;
+      background: #10b981;
+      color: white;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #475569;
+      text-align: center;
+      letter-spacing: 0.2px;
+    }
+
+    .step.active .step-label {
+      color: #0b2a4a;
+      font-weight: 700;
+    }
+
+    /* main content */
+    .content {
+      padding: 0.5rem 2rem 2rem 2rem;
+    }
+
+    .panel {
+      display: none;
+      animation: fade 0.3s ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0.5; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      letter-spacing: -0.4px;
+      margin-bottom: 0.2rem;
+    }
+
+    .panel .subhead {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #e9eef3;
+      padding-bottom: 1rem;
+    }
+
+    .panel .subhead i {
+      color: #f5b042;
+    }
+
+    /* form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem 1.5rem;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #1e293b;
+    }
+
+    .input-group label i {
+      color: #f5b042;
+      margin-right: 4px;
+      font-size: 0.8rem;
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 0.8rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      transition: 0.15s;
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: #0b2a4a;
+      box-shadow: 0 0 0 3px rgba(11, 42, 74, 0.1);
+    }
+
+    .input-group input::placeholder {
+      color: #94a3b8;
+    }
+
+    .payment-box {
+      background: #f9fbfd;
+      border: 1.5px dashed #cbd5e1;
+      padding: 1.5rem;
+      border-radius: 20px;
+      margin: 1rem 0 0.5rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fee-detail {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .fee-icon {
+      background: #eef6ff;
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0b2a4a;
+      font-size: 1.5rem;
+    }
+
+    .fee-text h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0b2a4a;
+    }
+
+    .fee-text p {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .fee-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0b2a4a;
+      letter-spacing: -1px;
+    }
+
+    .fee-amount small {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #64748b;
+      letter-spacing: normal;
+    }
+
+    .card-fields {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1.2rem 0 0.4rem 0;
+    }
+
+    .card-fields input {
+      padding: 0.8rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+    }
+
+    .card-fields input:focus {
+      outline: none;
+      border-color: #0b2a4a;
+      box-shadow: 0 0 0 3px rgba(11, 42, 74, 0.1);
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      width: fit-content;
+      margin: 1rem 0 0 0;
+    }
+
+    .secure-note i {
+      color: #10b981;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary {
+      background: #0b2a4a;
+      color: white;
+      box-shadow: 0 8px 18px -6px rgba(11, 42, 74, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: #123a61;
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #0b2a4a;
+      border: 1.5px solid #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .btn-pay {
+      background: #f5b042;
+      color: #0b2a4a;
+      box-shadow: 0 8px 18px -6px rgba(245, 176, 66, 0.4);
+    }
+
+    .btn-pay:hover {
+      background: #ffc25c;
+      transform: scale(0.98);
+    }
+
+    .btn-pay i {
+      font-size: 1rem;
+    }
+
+    /* job preview card */
+    .job-preview {
+      background: #ffffff;
+      border: 1px solid #e9eef3;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .job-info h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .job-info h3 i {
+      color: #f5b042;
+      font-size: 1rem;
+    }
+
+    .job-meta {
+      display: flex;
+      gap: 18px;
+      font-size: 0.85rem;
+      color: #475569;
+      margin-top: 6px;
+    }
+
+    .job-meta i {
+      color: #f5b042;
+      margin-right: 4px;
+    }
+
+    .badge-urgent {
+      background: #fef3c7;
+      color: #b45309;
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* footer small */
+    .footer-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 2rem;
+      border-top: 1px solid #e9eef3;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .footer-note i {
+      margin-right: 4px;
+      color: #f5b042;
+    }
+
+    /* responsive */
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .full-width {
+        grid-column: span 1;
+      }
+      .card-fields {
+        grid-template-columns: 1fr;
+      }
+      .header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .step-label {
+        font-size: 0.7rem;
+      }
+      .job-preview {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .fee-detail {
+        width: 100%;
+      }
+      .payment-box {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- header -->
+    <div class="header">
+      <div class="logo">
+        <i class="fas fa-briefcase"></i>
+        UK<span>JobBridge</span>
+      </div>
+      <div class="badge-uk">
+        <i class="fas fa-map-pin"></i> United Kingdom
+      </div>
+    </div>
+
+    <!-- progress steps -->
+    <div class="progress-container">
+      <div class="steps">
+        <div class="step active" id="step1Indicator">
+          <div class="step-circle">1</div>
+          <div class="step-label">Your details</div>
+        </div>
+        <div class="step" id="step2Indicator">
+          <div class="step-circle">2</div>
+          <div class="step-label">Payment</div>
+        </div>
+        <div class="step" id="step3Indicator">
+          <div class="step-circle">3</div>
+          <div class="step-label">Submit</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main content -->
+    <div class="content">
+      <!-- Step 1: Personal details -->
+      <div class="panel active" id="panelDetails">
+        <h2>Apply for this role</h2>
+        <div class="subhead">
+          <i class="fas fa-user-circle"></i> Please provide your personal details
+        </div>
+
+        <!-- job preview -->
+        <div class="job-preview">
+          <div class="job-info">
+            <h3><i class="fas fa-building"></i> Customer Support Advisor</h3>
+            <div class="job-meta">
+              <span><i class="fas fa-map-marker-alt"></i> London, UK</span>
+              <span><i class="fas fa-clock"></i> Full-time</span>
+              <span><i class="fas fa-pound-sign"></i> £26,000 – £31,000</span>
+            </div>
+          </div>
+          <div class="badge-urgent">
+            <i class="fas fa-bolt"></i> Urgent
+          </div>
+        </div>
+
+        <form id="detailsForm">
+          <div class="form-grid">
+            <div class="input-group">
+              <label><i class="fas fa-user"></i> First name</label>
+              <input type="text" id="firstName" placeholder="e.g. James" required>
+            </div>
+            <div class="input-group">
+              <label><i class="fas fa-user"></i> Last name</label>
+              <input type="text" id="lastName" placeholder="e.g. Wilson" required>
+            </div>
+            <div class="input-group full-width">
+              <label><i class="fas fa-envelope"></i> Email address</label>
+              <input type="email" id="email" placeholder="james.wilson@example.co.uk" required>
+            </div>
+            <div class="input-group">
+              <label><i class="fas fa-phone-alt"></i> Phone number</label>
+              <input type="tel" id="phone" placeholder="07700 900123" required>
+            </div>
+            <div class="input-group">
+              <label><i class="fas fa-map-pin"></i> Postcode</label>
+              <input type="text" id="postcode" placeholder="SW1A 1AA" required>
+            </div>
+            <div class="input-group full-width">
+              <label><i class="fas fa-graduation-cap"></i> Current job title (optional)</label>
+              <input type="text" id="jobTitle" placeholder="e.g. Retail Assistant">
+            </div>
+          </div>
+          <div class="btn-group">
+            <div></div> <!-- spacer -->
+            <button type="button" class="btn btn-primary" id="continueToPayment">
+              Continue to payment <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Payment -->
+      <div class="panel" id="panelPayment">
+        <h2>Secure payment</h2>
+        <div class="subhead">
+          <i class="fas fa-lock"></i> Application fee required to proceed
+        </div>
+
+        <!-- fee box -->
+        <div class="payment-box">
+          <div class="fee-detail">
+            <div class="fee-icon">
+              <i class="fas fa-file-invoice"></i>
+            </div>
+            <div class="fee-text">
+              <h4>Application processing fee</h4>
+              <p>One-time secure payment</p>
+            </div>
+          </div>
+          <div class="fee-amount">
+            £25<small>.00</small>
+          </div>
+        </div>
+
+        <form id="paymentForm">
+          <div class="input-group full-width">
+            <label><i class="fas fa-credit-card"></i> Cardholder name</label>
+            <input type="text" id="cardName" placeholder="Name as it appears on card" required>
+          </div>
+          <div class="card-fields">
+            <div class="input-group" style="grid-column: span 2;">
+              <label><i class="fas fa-credit-card"></i> Card number</label>
+              <input type="text" id="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19" required>
+            </div>
+            <div class="input-group">
+              <label><i class="fas fa-calendar-alt"></i> Expiry</label>
+              <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+            </div>
+            <div class="input-group">
+              <label><i class="fas fa-lock"></i> CVC</label>
+              <input type="text" id="cvc" placeholder="123" maxlength="4" required>
+            </div>
+          </div>
+
+          <div class="secure-note">
+            <i class="fas fa-shield-alt"></i> 256-bit SSL encrypted · Your payment is secure
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" id="backToDetails">
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-pay" id="payAndSubmit">
+              Pay £25 & submit application <i class="fas fa-check-circle"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Success (hidden initially) -->
+      <div class="panel" id="panelSuccess">
+        <div style="text-align: center; padding: 1.5rem 0;">
+          <div style="background: #e6f7ec; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+            <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981;"></i>
+          </div>
+          <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Application submitted!</h2>
+          <p style="color: #475569; max-width: 400px; margin: 0 auto 1rem;">Your payment was successful. We've sent a confirmation to your email.</p>
+          <div style="background: #f1f5f9; padding: 1rem 2rem; border-radius: 40px; display: inline-block; margin: 1rem 0;">
+            <i class="fas fa-receipt" style="color: #f5b042;"></i> Ref: UKJB-2025-<span id="refNumber">7842</span>
+          </div>
+          <div class="btn-group" style="justify-content: center; margin-top: 2rem;">
+            <button class="btn btn-primary" onclick="location.reload()">
+              <i class="fas fa-home"></i> Back to start
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer-note">
+      <span><i class="fas fa-lock"></i> Secure application</span>
+      <span><i class="fas fa-gdpr"></i> GDPR compliant</span>
+      <span><i class="fas fa-uk"></i> UK registered</span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const step1Indicator = document.getElementById('step1Indicator');
+      const step2Indicator = document.getElementById('step2Indicator');
+      const step3Indicator = document.getElementById('step3Indicator');
+
+      const panelDetails = document.getElementById('panelDetails');
+      const panelPayment = document.getElementById('panelPayment');
+      const panelSuccess = document.getElementById('panelSuccess');
+
+      const continueBtn = document.getElementById('continueToPayment');
+      const backBtn = document.getElementById('backToDetails');
+      const payBtn = document.getElementById('payAndSubmit');
+
+      const detailsForm = document.getElementById('detailsForm');
+      const paymentForm = document.getElementById('paymentForm');
+
+      // Helper: switch panel
+      function showPanel(panelId) {
+        panelDetails.classList.remove('active');
+        panelPayment.classList.remove('active');
+        panelSuccess.classList.remove('active');
+
+        if (panelId === 'details') {
+          panelDetails.classList.add('active');
+          step1Indicator.classList.add('active');
+          step2Indicator.classList.remove('active', 'completed');
+          step3Indicator.classList.remove('active', 'completed');
+          step1Indicator.classList.remove('completed');
+        } else if (panelId === 'payment') {
+          panelPayment.classList.add('active');
+          step1Indicator.classList.remove('active');
+          step1Indicator.classList.add('completed');
+          step2Indicator.classList.add('active');
+          step2Indicator.classList.remove('completed');
+          step3Indicator.classList.remove('active', 'completed');
+        } else if (panelId === 'success') {
+          panelSuccess.classList.add('active');
+          step1Indicator.classList.add('completed');
+          step2Indicator.classList.add('completed');
+          step3Indicator.classList.add('active');
+          step3Indicator.classList.remove('completed');
+        }
+      }
+
+      // Validate details step (basic)
+      function validateDetails() {
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const postcode = document.getElementById('postcode').value.trim();
+
+        if (!firstName || !lastName || !email || !phone || !postcode) {
+          alert('Please fill in all required fields (First name, Last name, Email, Phone, Postcode).');
+          return false;
+        }
+
+        // Simple email check
+        if (!email.includes('@') || !email.includes('.')) {
+          alert('Please enter a valid email address.');
+          return false;
+        }
+
+        // UK postcode very basic (no strict regex, but user gets feel)
+        if (postcode.length < 5) {
+          alert('Please enter a valid UK postcode.');
+          return false;
+        }
+
+        return true;
+      }
+
+      // Validate payment fields (realistic dummy check)
+      function validatePayment() {
+        const cardName = document.getElementById('cardName').value.trim();
+        const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+        const expiry = document.getElementById('expiry').value.trim();
+        const cvc = document.getElementById('cvc').value.trim();
+
+        if (!cardName || !cardNumber || !expiry || !cvc) {
+          alert('Please complete all payment fields.');
+          return false;
+        }
+        if (cardNumber.length < 16 || isNaN(cardNumber)) {
+          alert('Please enter a valid 16-digit card number.');
+          return false;
+        }
+        if (!expiry.includes('/') || expiry.length < 5) {
+          alert('Please enter expiry date as MM/YY.');
+          return false;
+        }
+        if (cvc.length < 3 || isNaN(cvc)) {
+          alert('Please enter a valid CVC (3 or 4 digits).');
+          return false;
+        }
+        return true;
+      }
+
+      // continue to payment
+      continueBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (validateDetails()) {
+          showPanel('payment');
+        }
+      });
+
+      // back to details
+      backBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPanel('details');
+      });
+
+      // pay & submit (simulate payment)
+      payBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (validatePayment()) {
+          // simulate a payment processing delay
+          payBtn.disabled = true;
+          payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+          setTimeout(() => {
+            // generate a random ref number
+            const refSpan = document.getElementById('refNumber');
+            if (refSpan) {
+              const randomRef = Math.floor(1000 + Math.random() * 9000);
+              refSpan.textContent = randomRef;
+            }
+            // go to success
+            showPanel('success');
+            // reset button state (optional)
+            payBtn.disabled = false;
+            payBtn.innerHTML = 'Pay £25 & submit application <i class="fas fa-check-circle"></i>';
+          }, 1200);
+        }
+      });
+
+      // Auto-format card number (add spaces every 4 digits)
+      const cardNumberInput = document.getElementById('cardNumber');
+      cardNumberInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s/g, '');
+        if (value.length > 16) value = value.slice(0, 16);
+        let formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+        e.target.value = formatted;
+      });
+
+      // Auto-format expiry (MM/YY)
+      const expiryInput = document.getElementById('expiry');
+      expiryInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+          value = value.slice(0,2) + '/' + value.slice(2,4);
+        }
+        e.target.value = value.slice(0, 5);
+      });
+
+      // CVC only digits
+      const cvcInput = document.getElementById('cvc');
+      cvcInput.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0,4);
+      });
+
+      // optional: prevent form submit on enter
+      detailsForm.addEventListener('submit', function(e) e.preventDefault());
+      paymentForm.addEventListener('submit', function(e) e.preventDefault());
+    })();
+  </script>
+</body>
+</html>
